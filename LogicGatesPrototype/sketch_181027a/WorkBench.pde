@@ -8,11 +8,18 @@ class WorkBench {
   Chip selectedChip;
   boolean dragging;
   boolean wiring;
+  boolean shouldTransmit;
+  boolean clocked;
 
+  float timeScale;
+  int time;
   WorkBench(float initX, float initY) {
     origin = new PVector(initX, initY);
     parts = new ArrayList<Chip>();
     wires = new ArrayList<Wire>();
+    shouldTransmit = true;
+    timeScale = 800;
+    time = millis();
   }
 
   void addPart(Chip chip) {
@@ -39,6 +46,7 @@ class WorkBench {
 
   void displayGrid() {
     stroke(60, 100);
+    strokeWeight(1);
     for (int x = 0 - int(origin.x % gridSpacing); x < width; x += gridSpacing) {
       line(x, 0, x, height);
     }
@@ -49,9 +57,17 @@ class WorkBench {
   }
 
   void displayWires() {
+    int nowT = millis();
+    boolean paused = true;
+    if(shouldTransmit && nowT - timeScale > time){
+      paused = false;
+      time = nowT;
+    }
     for (Wire wire : wires) {
       wire.render();
-      wire.transmit();
+      if (!paused || clocked) {
+        wire.transmit();
+      }
     }
   }
 
@@ -84,6 +100,7 @@ class WorkBench {
         selectedChip = chip;
         selectionActive = true;
         break;
+      } else if (clicked != null && mouseButton == RIGHT) {
       }
     }
     if (wiring && mouseButton == RIGHT) {

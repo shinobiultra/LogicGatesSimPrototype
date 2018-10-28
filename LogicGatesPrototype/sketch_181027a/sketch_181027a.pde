@@ -7,10 +7,7 @@ void setup() {
   bench.addPart(new Constant(new PVector(20, 20), 80, 100));
   bench.addPart(new Constant(new PVector(200, 20), 80, 100));
   bench.addPart(new AND(new PVector(200, 200), 80, 100));
-
-
-
-  frameRate(30);
+  bench.addPart(new AND(new PVector(200, 400), 80, 100));
 }
 
 void draw() {
@@ -34,4 +31,23 @@ void mousePressed() {
 
 void mouseReleased() {
   bench.onRelease();
+}
+
+void keyPressed() {
+  if (key == 'a' || key == 'A') {
+    bench.addPart(new AND(new PVector(mouseX, mouseY), 80, 100));
+  } else if (key == 'x' || key == 'X') {
+    bench.addPart(new XOR(new PVector(mouseX, mouseY), 80, 100));
+  } else if (key == 'o' || key == 'O') {
+    bench.addPart(new OR(new PVector(mouseX, mouseY), 80, 100));
+  } else if (key == 'n' || key == 'N') {
+    bench.addPart(new NOT(new PVector(mouseX, mouseY), 80, 100));
+  } else if (key == 'c' || key == 'C') {
+    bench.addPart(new Constant(new PVector(mouseX, mouseY), 80, 100));
+  } else if (key == 'p' || key == 'P') {
+    bench.addPart(new Clock(new PVector(mouseX, mouseY), 80, 100, 1));
+    bench.clocked = true;
+  } else if (key == ' ') {
+    bench.shouldTransmit = !bench.shouldTransmit;
+  }
 }
