@@ -58,14 +58,14 @@ class WorkBench {
 
   void displayWires() {
     int nowT = millis();
-    boolean paused = true;
-    if(shouldTransmit && nowT - timeScale > time){
+    boolean paused = !shouldTransmit;
+    if (shouldTransmit && nowT - timeScale > time) {
       paused = false;
       time = nowT;
     }
     for (Wire wire : wires) {
       wire.render();
-      if (!paused || clocked) {
+      if (!paused && clocked) {
         wire.transmit();
       }
     }
@@ -77,6 +77,7 @@ class WorkBench {
   }
 
   void onClick(float x, float y) {
+    Chip toDelete = null;
     for (Chip chip : parts) {
       IOPort clicked = chip.IOPortClick(x, y);
 
@@ -96,16 +97,20 @@ class WorkBench {
           }
           wiring = false;
         }
-      } else if (chip.isPointIn(x, y)) {
+      } else if (chip.isPointIn(x, y) && mouseButton == LEFT) {
         selectedChip = chip;
         selectionActive = true;
         break;
-      } else if (clicked != null && mouseButton == RIGHT) {
+      } else if (chip.isPointIn(x, y) && mouseButton == RIGHT) {
+        toDelete = chip;
       }
     }
     if (wiring && mouseButton == RIGHT) {
       wires.remove(wires.size()-1);
       wiring = false;
+    }
+    if (toDelete != null) {
+      parts.remove(toDelete);
     }
   }
 

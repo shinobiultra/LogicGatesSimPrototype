@@ -1,7 +1,7 @@
 WorkBench bench;
 
 void setup() {
-  size(1280, 720);
+  size(1280, 720, P2D);
   bench = new WorkBench(0, 0);
   bench.displayGrid();
   bench.addPart(new Constant(new PVector(20, 20), 80, 100));
